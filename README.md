@@ -4,31 +4,17 @@ Serviço responsável para controle de fluxo de caixa, permitindo a aplicação 
 
 ## Tech Stack
 Tecnologias utilizadas:
-- MicroServiço em .Net Core
-- Docker
+- MicroServiço em .Net Core (C#)
 - SQL Server
+- Docker
 
 ## Inicialização & Instalação
 
-
-Before to setup Worker service, you must complete the initial setup for database, described here: https://github.com/Clipboard-recruiting/candidate-sse-take-home-challenge-304
-
-Once database setup is completed, you need to follow these steps:
-
-- In `services\WorkService` folder, you need to edit `docker-compose.yml` file and point to same database network. It is required to allow communication between API and database services.
-
-```
-    networks:
-      cbh_thc_network:
-        name: seed_cbh_thc_network
-        external: true
-```
-
-- Once it is done, in same folder execute the command bellow to keep API service running:
+Todos os serviços, API e SQL Server, estão rodando em docker containers. Para utilizá-los, basta entrar no diretório raíz do projeto e rodar o seguinte comando:
 
 `docker-compose up -d`
 
-- Now, you are able to send HTTP request to **localhost** and **port 7110**.
+- Agora você será capaz de enviar requisições HTTP para o endereço **localhost** e **porta 7110**.
 
 ## API Documentation
 [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=shifts&uri=https%3A%2F%2Fgithub.com%2FClipboard-recruiting%2Fcandidate-sse-take-home-challenge-304%2Ftree%2Fsse-thc-304%2FInsomnia_THC_304.json)

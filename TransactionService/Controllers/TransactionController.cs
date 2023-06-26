@@ -1,24 +1,25 @@
 using TransactionService.Models;
 using TransactionService.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace TransactionService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ReleaseController : ControllerBase
+    public class TransactionController : ControllerBase
     {
-        private readonly ILogger<ReleaseController> _logger;
+        private readonly ILogger<TransactionController> _logger;
         private readonly IReleaseProvider _releaseService;
 
-        public ReleaseController(ILogger<ReleaseController> logger, IReleaseProvider releaseService)
+        public TransactionController(ILogger<TransactionController> logger, IReleaseProvider releaseService)
         {
             _logger = logger;
             _releaseService = releaseService;
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{transactionId}")]
         public async Task<IActionResult> GetTransaction([FromRoute] string transactionId)
         {
             if (string.IsNullOrEmpty(transactionId))
@@ -65,7 +66,7 @@ namespace TransactionService.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{transactionId}")]
         public async Task<IActionResult> DeleteTransaction([FromRoute] string transactionId)
         {
             if (string.IsNullOrEmpty(transactionId))
@@ -75,8 +76,10 @@ namespace TransactionService.Controllers
             {
                 bool response = await _releaseService.RemoveTransaction(transactionId);
 
-                if(response)
-                    return Ok();
+                if (!response)
+                    return NoContent();
+
+                return Ok();
 
             }
             catch (Exception ex)
@@ -87,12 +90,20 @@ namespace TransactionService.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetBalance()
+        [HttpGet("balance")]
+        public async Task<IActionResult> GetBalance([FromQuery(Name = "date")] string date)
         {
+            Balance response = new Balance();
+
+            date = date.Trim();
+
             try
             {
-                Balance response = await _releaseService.BalanceProcess(DateTime.Now);
+                var dateTimeObject = DateTime.ParseExact(date, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                response = await _releaseService.BalanceProcess(dateTimeObject);
+
+                if (response.Date == null)
+                    return NoContent();
 
                 return Ok(response);
 

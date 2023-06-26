@@ -57,6 +57,7 @@ namespace TransactionService.Services
                 if (result != null)
                 {
                     _databaseContext.Transaction.Remove(result);
+                    await _databaseContext.SaveChangesAsync();
                     return true;
                 }
             }
@@ -113,21 +114,14 @@ namespace TransactionService.Services
 
             try
             {
-                if (date.HasValue)
+                if (date != null && date.HasValue)
                 {
                     response.Date = date;
-                    var result = await _databaseContext.Transaction.Where(t => t.Date == date.Value.ToShortDateString()).Select(t => t.Amount).ToListAsync();
+                    string? strDate = date?.ToString("dd/MM/yyyy");
+                    var result = await _databaseContext.Transaction.Where(t => t.Date == strDate).Select(t => t.Amount).ToListAsync();
                     foreach (var entry in result)
                     {
                         response.Amount += Convert.ToDouble(entry);
-                    }
-                }
-                else
-                {
-                    var result = await _databaseContext.Transaction.ToListAsync();
-                    foreach (var entry in result)
-                    {
-                        response.Amount += Convert.ToDouble(entry.Amount);
                     }
                 }
             }
@@ -152,10 +146,6 @@ namespace TransactionService.Services
 
         private string GetDate()
         {
-            //DateTime dateTime = DateTime.UtcNow;
-            //TimeZoneInfo tzBrazilia = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
-            //return TimeZoneInfo.ConvertTimeFromUtc(dateTime, tzBrazilia).ToString("dd/MM/yyyy");
-
             DateTime dateTime = DateTime.UtcNow;
             TimeZoneInfo tzBrazilia = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
             return TimeZoneInfo.ConvertTimeFromUtc(dateTime, tzBrazilia).ToString("dd/MM/yyyy");

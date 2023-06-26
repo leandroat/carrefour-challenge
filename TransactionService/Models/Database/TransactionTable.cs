@@ -16,7 +16,7 @@ namespace TransactionService.Models.Database
         [Column("description")]
         public string Description { get; set; }
 
-        [Column("date")]
+        [Column("insertion_date")]
         public string Date { get; set; }
     }
 }

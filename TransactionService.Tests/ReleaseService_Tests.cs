@@ -7,7 +7,7 @@ using TransactionService.Services.Mock;
 
 namespace TransactionService.Tests;
 
-public class ReleaseService_CreateTransaction
+public class ReleaseService_Tests
 {
     private readonly ILogger<ReleaseService> _logger;
     private readonly DatabaseContextMock _dbContext;
@@ -19,7 +19,7 @@ public class ReleaseService_CreateTransaction
         Description = "111 test transaction"
     };
 
-    public ReleaseService_CreateTransaction()
+    public ReleaseService_Tests()
     {
         _logger = Mock.Of<ILogger<ReleaseService>>();
         _dbContext = new DatabaseContextMock();

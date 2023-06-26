@@ -1,0 +1,28 @@
+﻿version: '3'
+services:
+  transaction-service:
+    image: transaction-service
+    build: .
+    ports:
+      - "7110:51799"
+      - "7111:44334"
+    networks:
+      - carrefour-nt
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "P@ssword!!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./01-CreateTable.sql:/tmp/01-CreateTable.sql
+      - ./02-InsertData.sql:/tmp/02-InsertData.sql
+    networks:
+      - carrefour-nt
+
+networks:
+    carrefour-nt:
+        name: carrefour-nt
