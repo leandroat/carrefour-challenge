@@ -19,8 +19,11 @@ Agora você será capaz de enviar requisições HTTP para o endereço **localhos
 Para fazer o setup do banco de dados, acesse o docker container `sqlserver` e execute os scripts SQL contidos no diretório `/tmp`.
 
 - Uma vez dentro do container, acessar o banco de dados: `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P P@ssword!!`
+
 - Executar os scripts na seguinte ordem:
+
 -- Criação da tabela: `/opt/mssql-tools/bin/sqlcmd -S localhost -U "sa" -P "P@ssword!!" -i "/tmp/01-CreateTable.sql"`
+
 -- Popular algumas entradas iniciais: `/opt/mssql-tools/bin/sqlcmd -S localhost -U "sa" -P "P@ssword!!" -i "/tmp/02-InsertData.sql"`
 
 ## Documentação da API
