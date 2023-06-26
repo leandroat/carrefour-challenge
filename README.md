@@ -26,7 +26,7 @@ Para fazer o setup do banco de dados, acesse o docker container `sqlserver` e ex
 ## Documentação da API
 [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=TransactionService&uri=https%3A%2F%2Fgithub.com%2Fleandroat%2Fcarrefour-challenge%2Fblob%2Fmaster%2FAssets%2FInsomnia_TransactionService.json)
 
-### Endpoint **`POST /transaction`**
+### - Endpoint **`POST /transaction`**
 
 Cria um novo lançamento de caixa.
 
@@ -51,9 +51,10 @@ Cria um novo lançamento de caixa.
 ```
 
 HTTP 200 (Ok) - Sucesso ao retornar as informações
+
 HTTP 400 (Bad Request) - Houve um erro na requisição.
 
-### Endpoint **`GET /transaction/[id]`**
+### - Endpoint **`GET /transaction/[id]`**
 
 Retorna as informações relacionadas a transação correspondente ao `id` fornecido.
 
@@ -69,20 +70,24 @@ Retorna as informações relacionadas a transação correspondente ao `id` forne
 ```
 
 HTTP 200 (Ok) - Sucesso ao retornar as informações
+
 HTTP 204 (No Content) - Nenhuma informação existe para o `id` fornecido
+
 HTTP 400 (Bad Request) - Houve um erro na requisição.
 
-### Endpoint **`DELETE /transaction/[id]`**
+### - Endpoint **`DELETE /transaction/[id]`**
 
 Remove um lançamento específico relacionado ao `id` fornecido.
 
 **Resposta:**
 
 HTTP 200 (Ok) - Sucesso ao remover o lançamento
+
 HTTP 204 (No Content) - Nenhuma informação existe para o `id` fornecido
+
 HTTP 400 (Bad Request) - Houve um erro na requisição.
 
-### Endpoint **`GET /transaction/balance?date=[dd/mm/yyyy]`**
+### - Endpoint **`GET /transaction/balance?date=[dd/mm/yyyy]`**
 
 Retorna o balanço consolidado relacionado à todas transações existentes no dia `date` informado. Deve respeitar o formato `dd/mm/yyyy`.
 
@@ -96,6 +101,7 @@ Retorna o balanço consolidado relacionado à todas transações existentes no d
 ```
 
 HTTP 200 (Ok) - Sucesso ao retornar as informações
+
 HTTP 400 (Bad Request) - Houve um erro na requisição.
 
 ## Unit Tests
