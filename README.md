@@ -14,59 +14,91 @@ Todos os serviços, API e SQL Server, estão rodando em docker containers. Para 
 
 `docker-compose up -d`
 
-- Agora você será capaz de enviar requisições HTTP para o endereço **localhost** e **porta 7110**.
+Agora você será capaz de enviar requisições HTTP para o endereço **localhost:7111**.
 
-## API Documentation
+Para fazer o setup do banco de dados, acesse o docker container `sqlserver` e execute os scripts SQL contidos no diretório `/tmp`.
+
+- Uma vez dentro do container, acessar o banco de dados: `/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P P@ssword!!`
+- Executar os scripts na seguinte ordem:
+-- Criação da tabela: `/opt/mssql-tools/bin/sqlcmd -S localhost -U "sa" -P "P@ssword!!" -i "/tmp/01-CreateTable.sql"`
+-- Popular algumas entradas iniciais: `/opt/mssql-tools/bin/sqlcmd -S localhost -U "sa" -P "P@ssword!!" -i "/tmp/02-InsertData.sql"`
+
+## Documentação da API
 [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=shifts&uri=https%3A%2F%2Fgithub.com%2FClipboard-recruiting%2Fcandidate-sse-take-home-challenge-304%2Ftree%2Fsse-thc-304%2FInsomnia_THC_304.json)
 
-**Endpoint:**`/shifts/[worker-id]`
+##### Endpoint **`POST /transaction`**
 
-Retrieve all shifts given a **worker id**, **facility id**, **start** and **end** dates.
+Cria um novo lançamento de caixa.
 
-**Query parameters:**
-
-f - Query parameter for *facility-id*
-
-s - Query parameter for *start* date
-
-e - Query parameter for *end* date
-
-Example:
-
-`GET /shifts/1?f=3&s=2023-02-06&e=2023-02-06`
-
-**Response:**
-
-HTTP 400 Bad Request - For invalid query request.
-
-HTTP 200 Success - For a valid request, returning a shift list.
-
-Example:
+**Exemplo de requisição:**
 
 ```json
-[
-	{
-		"date": "2023-02-06",
-		"shifts": [
-			{
-				"id": 698696,
-				"start": "2023-02-06T13:00:00.591",
-				"end": "2023-02-06T18:00:00.591",
-				"facility": "3c5d64815100f1a02b1984e89dadbe2ed5d25d7d"
-			},
-			{
-				"id": 1815986,
-				"start": "2023-02-06T05:00:00.435",
-				"end": "2023-02-06T10:00:00.435",
-				"facility": "3c5d64815100f1a02b1984e89dadbe2ed5d25d7d"
-			},
-			{
-				"id": 1296699,
-				"start": "2023-02-06T05:00:00.753",
-				"end": "2023-02-06T10:00:00.753",
-				"facility": "3c5d64815100f1a02b1984e89dadbe2ed5d25d7d"
-			}
-		]
-	}
-]
+{
+	"amount": 234,
+	"description": "Test transaction"
+}
 ```
+
+**Exemplo de resposta:**
+
+```json
+{
+	"id": "a1oKxwlCi95QapBZcmFMjrFgXBYUvntf",
+	"amount": 234,
+	"description": "Test transaction",
+	"date": "2023-06-26T00:00:00"
+}
+```
+
+HTTP 200 (Ok) - Sucesso ao retornar as informações
+HTTP 400 (Bad Request) - Houve um erro na requisição.
+
+##### Endpoint **`GET /transaction/[id]`**
+
+Retorna as informações relacionadas a transação correspondente ao `id` fornecido.
+
+**Exemplo de resposta:**
+
+```json
+{
+	"id": "a1oKxwlCi95QapBZcmFMjrFgXBYUvntf",
+	"amount": 234,
+	"description": "Test transaction",
+	"date": "2023-06-26T00:00:00"
+}
+```
+
+HTTP 200 (Ok) - Sucesso ao retornar as informações
+HTTP 204 (No Content) - Nenhuma informação existe para o `id` fornecido
+HTTP 400 (Bad Request) - Houve um erro na requisição.
+
+##### Endpoint **`DELETE /transaction/[id]`**
+
+Remove um lançamento específico relacionado ao `id` fornecido.
+
+**Resposta:**
+
+HTTP 200 (Ok) - Sucesso ao remover o lançamento
+HTTP 204 (No Content) - Nenhuma informação existe para o `id` fornecido
+HTTP 400 (Bad Request) - Houve um erro na requisição.
+
+##### Endpoint **`GET /transaction/balance?date=[dd/mm/yyyy]`**
+
+Retorna o balanço consolidado relacionado à todas transações existentes no dia `date` informado. Deve respeitar o formato `dd/mm/yyyy`.
+
+**Exemplo de resposta:**
+
+```json
+{
+	"amount": 50,
+	"date": "2023-06-23T00:00:00"
+}
+```
+
+HTTP 200 (Ok) - Sucesso ao retornar as informações
+HTTP 400 (Bad Request) - Houve um erro na requisição.
+
+## Ideias & Melhorias
+- Criar uma API para retornar o balanço em um intervalo de dias
+- Utilizar paginação ao listar os lançamentos, isso melhoraria o desempenho.
+- Para um ambiente mais controlado, utilizar JWT Token como forma de autorização do uso do serviço.
